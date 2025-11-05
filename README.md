@@ -1,1 +1,1 @@
-Logic Exercise ada pada Program.cs
+Logic Exercise ada pada Project LogicExercise1
