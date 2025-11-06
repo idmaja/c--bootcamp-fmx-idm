@@ -1,5 +1,5 @@
-int jumlah = 1;
-for (int counter = 1; counter <= 8; ++counter)
+int result = 1;
+for (int counter = 1; counter <= 15; counter++)
 {
     Console.WriteLine("Perulangan ke-" + counter);
 
@@ -12,8 +12,9 @@ for (int counter = 1; counter <= 8; ++counter)
         continue;
     }
 
-    jumlah *= counter;
+    result *= counter;
 }
 
-Console.WriteLine("Jumlah: {0}", jumlah);
+Console.WriteLine("Jumlah Perkalian: {0}", result);
 Console.WriteLine("Selesai");
+Console.ReadLine();

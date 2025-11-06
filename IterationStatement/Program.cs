@@ -1,4 +1,4 @@
-bool DisplayMenu = true;
+﻿bool DisplayMenu = true;
 while (DisplayMenu)
 {
     DisplayMenu = MainMenu();
@@ -10,7 +10,8 @@ static bool MainMenu()
     Console.WriteLine("Choose an option:");
     Console.WriteLine("1) Print Numbers");
     Console.WriteLine("2) Guessing Game");
-    Console.WriteLine("3) Exit");
+    Console.WriteLine("3) Looping");
+    Console.WriteLine("4) Exit");
     Console.Write("Your option: ");
     string result = Console.ReadLine();
     if (result == "1")
@@ -24,7 +25,22 @@ static bool MainMenu()
         return true;
     }
     else if (result == "3")
+    {
+        Console.Clear();
+        Console.WriteLine("Looping!");
+        Console.Write("Type a number:");
+        int jumlah = Convert.ToInt32(Console.ReadLine());
+
+        ForLoop looping = new ForLoop();
+        looping.FirstLooping(jumlah);
+
+        return true;
+    }
+    else if (result == "4")
+    {
+        Console.Clear();
         return false;
+    }
     else
         return true;
 }
@@ -34,7 +50,7 @@ static void PrintNumbers()
     Console.Clear();
     Console.WriteLine("Print Numbers!");
     Console.WriteLine("Type a number:");
-    int result = int.Parse(Console.ReadLine());
+    int result = Convert.ToInt32(Console.ReadLine());
     int counter = 1;
     while (counter <= result)
     {
@@ -60,7 +76,7 @@ static void GuessingGame()
     do
     {
         Console.WriteLine("Guess a number between 1 and 10:");
-        int guessedNumber = int.Parse(Console.ReadLine());
+        int guessedNumber = Convert.ToInt32(Console.ReadLine());
         guesses++;
         if (guessedNumber == randomNumber)
             incorrect = false;
