@@ -97,3 +97,5 @@ foreach (Car c in carList)
 {
     Console.WriteLine("Car: {0} {1}", c.Make, c.Model);
 }
+
+Console.WriteLine(carList.Count());

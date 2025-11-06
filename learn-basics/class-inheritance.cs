@@ -1,4 +1,8 @@
 /// ------------------------------------------------------------------------------
+Employee employee = new Employee();
+employee.Name = "Alice";
+employee.Department = "HR";
+employee.DisplayInfo(); // Output: Name: Alice, Department: HR
 
 /// CLASS INHERITANCE
 
@@ -16,8 +20,3 @@ public class Employee : Person // Employee inherits from Person (jadi Name ikut 
         Console.WriteLine($"Name: {Name}, Department: {Department}");
     }
 }
-
-Employee employee = new Employee();
-employee.Name = "Alice";
-employee.Department = "HR";
-employee.DisplayInfo(); // Output: Name: Alice, Department: HR

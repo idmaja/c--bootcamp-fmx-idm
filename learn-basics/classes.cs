@@ -14,19 +14,19 @@ class Manusia
 
 class Mobil
 {
-    public string warna;
+    public string Warna;
 
-    public int kecepatan;
+    public int Kecepatan;
 
-    protected string merk;
+    protected string Merk;
 
-    internal string tipe;
+    internal string Tipe;
 
     private int _harga = 50000;
 
     public string GetMerk(string merkInput)
     {
-        return merk = merkInput;
+        return Merk = merkInput;
     }
 
     public void Klakson()

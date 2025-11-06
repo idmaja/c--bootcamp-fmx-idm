@@ -4,7 +4,7 @@ namespace CobaProjectConsoleCSharp1
     {
         public string? warna; //? menandakan bahwa variabel ini boleh bernilai null tapi konsekuensinya harus siap handle null saat pakai.
         public int kecepatan = 0;
-        protected string merk = ""; 
+        protected string merk = ""; // protected berarti bisa di akses di dalam 
         internal string tipe = "";
         private int harga = 50000;
 
