@@ -63,7 +63,6 @@ public class Store
         _storeCount++;
     }
 
-
     public void Open()
     {
         Status = StoreStatus.Open;
@@ -74,6 +73,11 @@ public class Store
     {
         Status = StoreStatus.Closed;
         // Console.WriteLine("Store is closed!");
+    }
+
+    public bool IsOpen()
+    {
+        return Status == StoreStatus.Open;
     }
 
     public void PrintStoreInfo()
@@ -87,7 +91,16 @@ public class Store
 
     public static int PrintStoreCount()
     {
-        return StoreCount;
+        bool isOpen = Store.Is;
+        if (StoreCount > 0 && !IsOpen())
+        {
+            return StoreCount;
+        }
+        else
+        {
+            return 0;
+        }
+        
     }
 
 

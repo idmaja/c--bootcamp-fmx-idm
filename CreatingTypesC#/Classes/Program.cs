@@ -12,10 +12,10 @@ Console.WriteLine("------------------------------------");
 Store milikDina = new Store("Store Dina", "Jl. Karawaci No.19, Tangerang", "088736361881");
 Store milikTony = new Store("Store Tony", "Jl. Karawaci No.20, Tangerang", "0887363124381");
 
-milikDina.Open();
+milikDina.Close();
 milikDina.PrintStoreInfo();
-
-
+Console.WriteLine();
+milikTony.PrintStoreInfo();
 
 Console.WriteLine($"Total Stores Count : {Store.StoreCount}");
 
