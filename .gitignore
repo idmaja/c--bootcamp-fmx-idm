@@ -76,6 +76,9 @@ artifacts/
 # VS Code
 .vscode/
 
+# .git
+.git/
+
 # Windows
 Thumbs.db
 Desktop.ini

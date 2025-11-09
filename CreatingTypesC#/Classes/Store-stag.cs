@@ -1,8 +1,5 @@
 public interface IStore
 {
-    string Name { get; set; }
-    string Address { get; set; }
-    StoreStatus Status { get; } 
 
     void OpenStore();
     void CloseStore();
@@ -40,6 +37,8 @@ public class Stores : IStore
     public StoreStatus Status { get; private set; } 
     public List<Product> Products { get; private set; }
     public string Address { get; set; }
+
+    public DateTime BuildDate => _buildDate;
     
     // Konstruktor default
     public Stores()
@@ -47,7 +46,7 @@ public class Stores : IStore
         Id = Guid.NewGuid();
         _buildDate = DateTime.Now;
         Name = "Toko Default";
-        Address = "Alamat Tidak Diketahui";
+        Address = "Unkown Address";
         Status = StoreStatus.Closed; 
         Products = new List<Product>(); 
         

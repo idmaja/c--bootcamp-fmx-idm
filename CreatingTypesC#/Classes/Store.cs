@@ -91,8 +91,7 @@ public class Store
 
     public static int PrintStoreCount()
     {
-        bool isOpen = Store.Is;
-        if (StoreCount > 0 && !IsOpen())
+        if (StoreCount > 0)
         {
             return StoreCount;
         }
@@ -100,7 +99,6 @@ public class Store
         {
             return 0;
         }
-        
     }
 
 
