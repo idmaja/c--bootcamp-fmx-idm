@@ -1,5 +1,4 @@
-﻿Console.WriteLine("--------------------------------------");
-Console.WriteLine();
+﻿Console.WriteLine();
 
 IAnimal dog = new Dog { Name = "Buddy" };
 IAnimal cat = new Cat { Name = "Mimi" };
@@ -19,3 +18,12 @@ Console.WriteLine();
 IEnumerator e = new Countdown(); // Casts Countdown instance to IEnumerator interface
 while (e.MoveNext())
     Console.Write(e.Current + " ");
+Console.WriteLine();
+
+Console.WriteLine("--------------------------------------");
+Console.WriteLine();
+
+Robot robot = new Robot();
+robot.Attack();
+robot.Move();
+Console.WriteLine("--------------------------------------");
