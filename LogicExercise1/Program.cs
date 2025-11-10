@@ -1,17 +1,27 @@
-﻿int? n = int.Parse(Console.ReadLine());
-for (int i = 1; i < n + 1; i++)
+﻿int? panjang = int.Parse(Console.ReadLine());
+
+for (int i = 1; i < panjang + 1; i++)
 {
     if (i % 3 == 0 && i % 5 == 0)
     {
-        Console.Write(", foobar");
+        if (i % 7 == 0)
+            Console.Write(", foobarjazz");
+        else
+            Console.Write(", foobar");
     }
     else if (i % 3 == 0)
     {
-        Console.Write(", bar");
+        if (i % 7 == 0)
+            Console.Write(", foojazz");
+        else
+            Console.Write(", foo");
     }
     else if (i % 5 == 0)
     {
-        Console.Write(", bar");
+        if (i % 7 == 0)
+            Console.Write(", barjazz");
+        else
+            Console.Write(", bar");
     }
     else if (i == 1)
     {

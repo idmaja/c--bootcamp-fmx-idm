@@ -1,1 +1,0 @@
-Logic Exercise ada pada Project LogicExercise1
