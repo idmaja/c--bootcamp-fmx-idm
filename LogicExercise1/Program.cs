@@ -1,4 +1,5 @@
-﻿int? panjang = int.Parse(Console.ReadLine());
+﻿string? inputuser = Console.ReadLine();
+int panjang = string.IsNullOrWhiteSpace(inputuser) || !int.TryParse(inputuser, out int hasil) ? 10 : hasil;
 
 for (int i = 1; i < panjang + 1; i++)
 {
