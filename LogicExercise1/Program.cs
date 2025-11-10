@@ -25,13 +25,9 @@ for (int i = 1; i < panjang + 1; i++)
             Console.Write(", bar");
     }
     else if (i == 1)
-    {
         Console.Write(i + "");
-    }
     else
-    {
         Console.Write(", " + i);
-    }
 }
 
 Console.ReadLine();
