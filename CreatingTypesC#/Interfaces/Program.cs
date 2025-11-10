@@ -1,19 +1,21 @@
-﻿IEnumerator e = new Countdown(); // Casts Countdown instance to IEnumerator interface
+﻿Console.WriteLine("--------------------------------------");
+Console.WriteLine();
+
+IAnimal dog = new Dog { Name = "Buddy" };
+IAnimal cat = new Cat { Name = "Mimi" };
+
+// dog.Speak();
+// cat.Speak(); 
+
+// Semua IAnimal bisa dimasukkan ke dalam 1 daftar
+List<IAnimal> animals = new List<IAnimal> { dog, cat };
+
+foreach (var a in animals)
+    a.Speak(); // Memanggil Speak() dari tiap implementasi yang berbeda
+
+Console.WriteLine("--------------------------------------");
+Console.WriteLine();
+
+IEnumerator e = new Countdown(); // Casts Countdown instance to IEnumerator interface
 while (e.MoveNext())
     Console.Write(e.Current + " ");
-
-public interface IEnumerator // Interface Declaration
-{
-    bool MoveNext();      // Method
-    object Current { get; } // Read-only Property
-    void Reset();         // Method
-}
-
-internal class Countdown : IEnumerator // Implements the IEnumerator interface
-{
-    int count = 9;
-
-    public bool MoveNext() => count-- > 0; // Implementation of MoveNext
-    public object Current => count;        // Implementation of Current
-    public void Reset() { throw new NotSupportedException(); } // Implementation of Reset
-}
