@@ -1,6 +1,6 @@
 public class Kotak<T> // T = placeholder tipe data
 {
-    private T isi;
+    private T? isi;
 
     public void Simpan(T value)
     {
@@ -9,6 +9,14 @@ public class Kotak<T> // T = placeholder tipe data
 
     public T Ambil()
     {
-        return isi;
+        try
+        {
+            return isi!;
+        }
+        catch ( NullReferenceException e)
+        {
+            Console.WriteLine(e.Message);
+            throw;
+        }
     }
 }
