@@ -1,4 +1,4 @@
-delegate void ProgressReporter(int percent);
+public delegate void ProgressReporter(int percent);
 
 class Report
 {
