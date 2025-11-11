@@ -16,6 +16,12 @@ class GenericType
         return result;
     }
 
+    public static void TransformActionGeneric<T>(T[] values, Action<T> transformer)
+    {
+        foreach (T value in values)
+            transformer(value);
+    }
+
     /// <summary>
     /// tidak perlu membuat delegate sendiri karena di C# sudah ada yaitu pakai Func<TKey, TValue>
     /// </summary>

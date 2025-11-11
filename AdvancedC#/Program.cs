@@ -28,7 +28,10 @@ static void BasicDelegate()
     Console.WriteLine($"After Square transform (Generic): [{string.Join(", ", values)}]");
 
     int[] result = GenericType.TransformGenericNonVoid(values, GenericType.SquareGeneric); // Generic method non void return
-    Console.WriteLine($"After Square transform (Generic) Non Void: [{string.Join(", ", result)}]");
+    Console.WriteLine($"After Square transform (Generic) : [{string.Join(", ", result)}] (Non Void)");
+
+    string[] names = { "Alice", "Bob", "Charlie" };
+    GenericType.TransformActionGeneric(names, x => Console.WriteLine($"Execute these person : {x}"));
 
     Util.Transform(values, Util.Cube);
     Console.WriteLine($"After Cube transform: [{string.Join(", ", values)}]");
