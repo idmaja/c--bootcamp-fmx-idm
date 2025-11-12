@@ -4,8 +4,8 @@ public delegate T NameChangedHandler<T>(T oldName, T newName);
 
 public class Stock
 {
-    private decimal price;
-    private string? nama;
+    private decimal _price;
+    private string? _nama;
 
     public event PriceChangedHandler? PriceChanged;
 
@@ -13,29 +13,29 @@ public class Stock
 
     public decimal Price
     {
-        get => price;
+        get => _price;
         set
         {
-            if (price == value) return;
+            if (_price == value) return;
 
-            decimal oldPrice = price;
-            price = value;
+            decimal oldPrice = _price;
+            _price = value;
 
-            PriceChanged?.Invoke(oldPrice, price); // panggil event jika ada subscriber
+            PriceChanged?.Invoke(oldPrice, _price); // panggil event jika ada subscriber
         }
     }
 
     public string? Nama
     {
-        get => nama;
+        get => _nama;
         set
         {
-            if (nama == value) return;
+            if (_nama == value) return;
 
-            string? oldName = nama ?? "NOBODY";
-            nama = value;
+            string? oldName = _nama ?? "NOBODY";
+            _nama = value;
 
-            NameChanged?.Invoke(oldName!, nama!);
+            NameChanged?.Invoke(oldName!, _nama!);
         }
     }
 
