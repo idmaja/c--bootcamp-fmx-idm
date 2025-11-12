@@ -21,8 +21,7 @@ public class Stock
             decimal oldPrice = price;
             price = value;
 
-            if (PriceChanged == null)
-                PriceChanged?.Invoke(oldPrice, price); // panggil event jika ada subscriber
+            PriceChanged?.Invoke(oldPrice, price); // panggil event jika ada subscriber
         }
     }
 
