@@ -13,7 +13,6 @@ for (int i = 1; i < panjang + 1; i++)
     if (i % 3 == 0) output += "foo";
     if (i % 5 == 0) output += "bar";
     if (i % 7 == 0) output += "jazz";
-    if (output == "") output = i.ToString();
 
     if (i % 3 == 0 && i % 5 == 0 && i % 7 == 0) output = "foobarjazz";
     else if (i % 3 == 0 && i % 5 == 0) output = "foobar";
@@ -21,6 +20,7 @@ for (int i = 1; i < panjang + 1; i++)
     else if (i % 3 == 0 && i % 7 == 0) output = "foojazz";
     else if (i % 4 == 0) output = "baz";
 
+    if (output == "") output = i.ToString();
     if (i != 1) sbOutput.Append(", ");
     sbOutput.Append(output);
 }
