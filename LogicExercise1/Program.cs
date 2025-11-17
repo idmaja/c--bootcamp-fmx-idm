@@ -5,24 +5,25 @@ string? inputuser = Console.ReadLine();
 long panjang = string.IsNullOrWhiteSpace(inputuser) || !long.TryParse(inputuser, out long hasil) ? 15 : hasil;
 
 var sbOutput = new StringBuilder();
+string output = "";
 
 for (int i = 1; i < panjang + 1; i++)
 {
-    string output = "";
+    bool modBy3 = i % 3 == 0; bool modBy4 = i % 4 == 0;
+    bool modBy5 = i % 5 == 0; bool modBy7 = i % 7 == 0;
+    bool modBy9 = i % 9 == 0;
 
-    if (i % 3 == 0) output += "foo";
-    if (i % 5 == 0) output += "bar";
-    if (i % 7 == 0) output += "jazz";
+    if (modBy3) output += "foo";
+    if (modBy5) output += "bar";
+    if (modBy7) output += "jazz";
 
-    if (i % 3 == 0 && i % 5 == 0 && i % 7 == 0) output = "foobarjazz";
-    else if (i % 3 == 0 && i % 5 == 0) output = "foobar";
-    else if (i % 3 == 0 && i % 9 == 0) output = "huzz";
-    else if (i % 3 == 0 && i % 7 == 0) output = "foojazz";
-    else if (i % 4 == 0) output = "baz";
+    if (modBy3 && modBy9) output = "huzz";
+    else if (modBy4) output = "baz";
 
     if (output == "") output = i.ToString();
     if (i != 1) sbOutput.Append(", ");
     sbOutput.Append(output);
+    output = "";
 }
 
 Console.WriteLine(sbOutput.ToString());
