@@ -11,10 +11,6 @@ for (int i = 1; i < panjang + 1; i++)
         else
             Console.Write(", foobar");
     }
-    // else if (i % 9 == 0)
-    // {
-    //     Console.Write(", huzz");
-    // }
     else if (i % 3 == 0)
     {
         if (i % 9 == 0)
