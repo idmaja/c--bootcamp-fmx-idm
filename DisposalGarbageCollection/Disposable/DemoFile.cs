@@ -11,12 +11,11 @@ sealed class DemoFile : IDisposable
     {
         using var writer = new StreamWriter(_stream, leaveOpen: true);
         writer.WriteLine(text);
-        writer.Flush();
+        writer.Flush(); // Flush itu untuk memaksa buffer menulis data ke tujuan aslinya
     }
 
     public void Dispose()
     {
-        // Lepaskan resource yang dimiliki
-        _stream?.Dispose();
+        _stream?.Dispose(); // untuk Lepaskan resource yang dimiliki
     }
 }

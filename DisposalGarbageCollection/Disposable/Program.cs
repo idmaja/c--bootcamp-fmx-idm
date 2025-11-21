@@ -3,7 +3,7 @@
 // ----- using statement ---------
 using (var fs = new FileStream("demo.txt", FileMode.Open))
 {
-    // pakai fs
-} // di sini fs.Dispose() otomatis terpanggil
+    // di sini fs.Dispose() otomatis terpanggil
+} 
 
 
