@@ -1,0 +1,3 @@
+Baris 1: Ini adalah rahasia.
+Baris 2: Belajar C#.
+Baris 3: Tulisan ini tanpa enter.

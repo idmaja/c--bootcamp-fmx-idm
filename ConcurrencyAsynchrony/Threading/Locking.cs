@@ -1,6 +1,6 @@
 public class Locking
 {
-    static readonly object kunciGudang = new object(); // Objek khusus untuk kunci [cite: 68]
+    static readonly object kunciGudang = new object(); // Objek khusus untuk kunci
     static int stok = 0;
 
     public static void TambahBarang()
@@ -17,6 +17,6 @@ public class Locking
     // int stokBahan = 0; // Shared data
     // void TambahStok() 
     // {
-    //     stokBahan++; // Ini NON-ATOMIC, bisa konflik jika diakses barengan [cite: 66]
+    //     stokBahan++; // Ini NON-ATOMIC, bisa konflik jika diakses barengan
     // }
 }
