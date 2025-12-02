@@ -3,11 +3,11 @@
     void Log(string message);
 }
 
-public class MathClassTryMoq
+public class MathClass
 {
     private readonly IMathLogger _logger;
 
-    public MathClassTryMoq(IMathLogger logger)
+    public MathClass(IMathLogger logger)
     {
         _logger = logger;
     }

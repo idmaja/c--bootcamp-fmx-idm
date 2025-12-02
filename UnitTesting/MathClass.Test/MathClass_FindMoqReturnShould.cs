@@ -1,15 +1,15 @@
+﻿
 using Moq;
-using NUnit.Framework;
 
-public class MathClassTryMoq_FindMoqReturnShould
+public class MathClass_FindMoqReturnShould
 {
     [Test]
     public void Tambah_CallLogger()
     {
         var logger = new Mock<IMathLogger>();
-        var mathClassTryMoq = new MathClassTryMoq(logger.Object);
+        var mathClass = new MathClass(logger.Object);
 
-        var result = mathClassTryMoq.Tambah(2, 3);
+        var result = mathClass.Tambah(2, 3);
         var expectedResult = 5;
 
         Assert.That(result, Is.EqualTo(expectedResult));
