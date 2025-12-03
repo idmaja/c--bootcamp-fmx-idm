@@ -1,7 +1,7 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi;
 using Serilog;
 using Serilog.Events;
-using Serilog.Formatting.Compact;
 using Serilog.Sinks.SystemConsole.Themes;
 
 Log.Logger = new LoggerConfiguration()
@@ -11,14 +11,6 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console(
         theme: AnsiConsoleTheme.Code,
         outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} [{Level:u3}] {Message:lj}{NewLine}{Exception}"
-    )
-    .WriteTo.File(
-        new CompactJsonFormatter(), 
-        "logs/restaurant-api-.json", 
-        rollingInterval: RollingInterval.Day, 
-        retainedFileCountLimit: 7, 
-        shared: false, 
-        flushToDiskInterval: TimeSpan.FromSeconds(1)
     )
     .CreateLogger();
 
@@ -47,11 +39,29 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-
 builder.Services.AddSingleton<IRestaurantInfoState, RestaurantInfoState>();
 builder.Services.AddSingleton<IMainServiceRestaurant, MainServiceRestaurantImplementation>();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<RestaurantDbContext>();
+
+    if (!db.RestaurantInfos.Any())
+    {
+        db.RestaurantInfos.Add(new RestaurantInfoState
+        {
+           ChefName = "Chef Basuki",
+            RestaurantName = "Restoran Sederhana",
+            RestaurantAddress = "Jalan Kumbang No 19, Jakarta"
+        });
+        db.SaveChanges();
+    }
+    var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<RestaurantDbContext>();
+    context.Database.EnsureCreated();
+}
 
 if (app.Environment.IsDevelopment())
 {
