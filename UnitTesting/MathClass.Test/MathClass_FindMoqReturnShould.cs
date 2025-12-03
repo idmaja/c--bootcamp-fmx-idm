@@ -1,6 +1,10 @@
 ﻿
 using Moq;
 
+
+/// <summary>
+/// try using Moq in simple code
+/// </summary>
 public class MathClass_FindMoqReturnShould
 {
     [Test]
