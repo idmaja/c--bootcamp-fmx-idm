@@ -39,29 +39,16 @@ builder.Services.AddCors(options =>
               .AllowAnyHeader();
     });
 });
-builder.Services.AddSingleton<IRestaurantInfoState, RestaurantInfoState>();
-builder.Services.AddSingleton<IMainServiceRestaurant, MainServiceRestaurantImplementation>();
+builder.Services.AddDbContext<RestaurantDbContext>(options => 
+{
+    // register DB
+    var cs = builder.Configuration.GetConnectionString("DefaultConnection");
+    options.UseSqlite(cs);
+});
+builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IMenuService, MenuService>();  
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<RestaurantDbContext>();
-
-    if (!db.RestaurantInfos.Any())
-    {
-        db.RestaurantInfos.Add(new RestaurantInfoState
-        {
-           ChefName = "Chef Basuki",
-            RestaurantName = "Restoran Sederhana",
-            RestaurantAddress = "Jalan Kumbang No 19, Jakarta"
-        });
-        db.SaveChanges();
-    }
-    var services = scope.ServiceProvider;
-    var context = services.GetRequiredService<RestaurantDbContext>();
-    context.Database.EnsureCreated();
-}
 
 if (app.Environment.IsDevelopment())
 {
@@ -78,6 +65,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseCors("AllowAll");
+app.UseCors();
 app.MapControllers();
 app.Run();
