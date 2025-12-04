@@ -79,10 +79,11 @@ artifacts/
 # .git
 .git/
 
+*.db
+
 # Windows
 Thumbs.db
 Desktop.ini
-
 
 # GITHUB BOOTCAMP MAS AKMAL
 github-bootcamp-fmx/
