@@ -90,3 +90,6 @@ github-bootcamp-fmx/
 
 Logs/
 logs/
+
+*.db-shm
+*.db-wal

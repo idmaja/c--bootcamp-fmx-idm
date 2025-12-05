@@ -1,10 +1,10 @@
 public interface IMenuService
 {
-    Task<ResultReponse<IEnumerable<Menu>>> GetAllMenusAsync();
-    Task<ResultReponse<Menu?>> GetMenuByIdAsync(string id);
-    Task<ResultReponse<Menu>> CreateMenuAsync(MenuRequest request);
-    Task<ResultReponse<Menu?>> UpdateMenuAsync(string id, MenuRequest request);
-    Task<ResultReponse<bool>> DeleteMenuAsync(string id);
+    Task<Result<IEnumerable<MenuResponse>>> GetAllMenusAsync();
+    Task<Result<MenuResponse>> GetMenuByIdAsync(string id);
+    Task<Result<MenuResponse>> CreateMenuAsync(MenuRequest request);
+    Task<Result<MenuResponse>> UpdateMenuAsync(string id, MenuRequest request);
+    Task<Result<bool>> DeleteMenuAsync(string id);
 
-    Task<ResultReponse<decimal>> GetTotalStockValueAsync();
+    Task<Result<decimal>> GetTotalStockValueAsync();
 }

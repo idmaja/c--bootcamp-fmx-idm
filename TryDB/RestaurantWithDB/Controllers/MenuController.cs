@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
 
 [ApiController]
 [Route("api/v1/restaurant/menu")]
+[Authorize(Roles = "Admin,SuperAdmin")]
 public class MenuController : ControllerBase
 {
     private readonly IMenuService _menuService;
@@ -19,10 +21,11 @@ public class MenuController : ControllerBase
     [SwaggerOperation(
         Summary = "Get All menus"
     )]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<List<Menu>>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<List<MenuResponse>>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> GetMenus()
     {
         try
@@ -50,16 +53,17 @@ public class MenuController : ControllerBase
     [SwaggerOperation(
         Summary = "Get menu by ID"
     )]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<Menu>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<MenuResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> GetMenuById(string menuId)
     {
         try
         {
             var menu = await _menuService.GetMenuByIdAsync(menuId);
-            return Ok(new GlobalResponse<Menu>
+            return Ok(new GlobalResponse<MenuResponse>
             {
                 Status = true,
                 Message = "Get Menu by ID retrieved successfully",
@@ -83,16 +87,17 @@ public class MenuController : ControllerBase
         Description = "",
         OperationId = "CreateMenu"
     )]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<Menu>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<MenuResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> AddMenu([FromBody] MenuRequest request)
     {
         try
         {
             var menu = await _menuService.CreateMenuAsync(request);
-            return Ok(new GlobalResponse<Menu>
+            return Ok(new GlobalResponse<MenuResponse>
             {
                 Status = true,
                 Message = "Added a Menu successfully",
@@ -116,16 +121,17 @@ public class MenuController : ControllerBase
         Description = "",
         OperationId = "UpdateMenu"
     )]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<Menu>))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<MenuResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> UpdateMenu(string menuId, [FromBody] MenuRequest request)
     {
         try
         {
             var menu = await _menuService.UpdateMenuAsync(menuId, request);
-            return Ok(new GlobalResponse<Menu>
+            return Ok(new GlobalResponse<MenuResponse>
             {
                 Status = true,
                 Message = "Updated a Menu successfully",
@@ -152,7 +158,8 @@ public class MenuController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> DeleteMenu(string menuId)
     {
         try
@@ -177,6 +184,7 @@ public class MenuController : ControllerBase
     }
 
     [HttpGet("total-value-stock")]
+    [Authorize(Roles = "Admin,SuperAdmin,User")]
     [SwaggerOperation(
         Summary = "Get total value by stock",
         Description = "",
@@ -185,6 +193,8 @@ public class MenuController : ControllerBase
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(GlobalResponse<object>))]
 
     public async Task<IActionResult> GetTotalStockValue()
     {
@@ -208,5 +218,4 @@ public class MenuController : ControllerBase
             });
         }
     }
-
 }
