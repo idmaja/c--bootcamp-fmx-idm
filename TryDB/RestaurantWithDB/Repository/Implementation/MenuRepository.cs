@@ -15,7 +15,7 @@ public class MenuRepository : IMenuRepository
 
     public async Task<IEnumerable<Menu>> GetAllAsync()
     {
-        _logger.Information("[REPO] Get all menus");
+        _logger.Information("[REPO] Get all menu(s)");
 
         return await _context.Menus.ToListAsync();
     }

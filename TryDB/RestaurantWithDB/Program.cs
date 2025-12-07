@@ -100,12 +100,19 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<RestaurantDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<IMenuRepository, MenuRepository>();
+builder.Services.AddScoped<IRestaurantRepository, RestaurantRepository>();
 builder.Services.AddScoped<IMenuService, MenuService>();
+builder.Services.AddScoped<IRestaurantService, RestaurantService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegistrationValidator>();
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginValidator>();
 builder.Services.AddTransient<IValidator<CreateMenuRequest>, CreateMenuValidator>();
 builder.Services.AddTransient<IValidator<UpdateMenuRequest>, UpdateMenuValidator>();
+builder.Services.AddTransient<IValidator<CreateRestaurantRequest>, CreateRestaurantValidator>();
+builder.Services.AddTransient<IValidator<UpdateRestaurantRequest>, UpdateRestaurantValidator>();
+builder.Services.AddTransient<IValidator<CreateAccountRequest>, CreateAccountValidator>();
+builder.Services.AddTransient<IValidator<UpdateAccountRequest>, UpdateAccountValidator>();
 
 var app = builder.Build();
 

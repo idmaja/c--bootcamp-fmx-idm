@@ -13,10 +13,9 @@ public class MenuController : ControllerBase
     private readonly IMenuService _menuService;
     private readonly Serilog.ILogger _logger;
 
-    public MenuController(
-        IMenuService menuService
-    ){
+    public MenuController(IMenuService menuService){
         _menuService = menuService;
+        
         _logger = Log.ForContext<MenuController>();
     }
 
@@ -135,7 +134,7 @@ public class MenuController : ControllerBase
             return Ok(new GlobalResponse<MenuResponse>
             {
                 Status = true,
-                Message = "Added a Menu successfully",
+                Message = "Successfully added a Menu",
                 Data = menu.Value
             });
         }
@@ -180,7 +179,7 @@ public class MenuController : ControllerBase
             return Ok(new GlobalResponse<MenuResponse>
             {
                 Status = true,
-                Message = "Updated a Menu successfully",
+                Message = "Successfully updated a Menu",
                 Data = menu.Value
             });
         }
@@ -224,7 +223,7 @@ public class MenuController : ControllerBase
             return Ok(new GlobalResponse<object>
             {
                 Status = true,
-                Message = $"Deleted '{menu.Value.Name}' successfully",
+                Message = $"Successfully deleted '{menu.Value.Name}' !",
                 Data = null
             });
         }
@@ -270,7 +269,7 @@ public class MenuController : ControllerBase
             return Ok(new GlobalResponse<object>
             {
                 Status = true,
-                Message = "Get total stock value successfully",
+                Message = "Successfully get total stock value",
                 Data = totalStockValue.Value
             });
         }

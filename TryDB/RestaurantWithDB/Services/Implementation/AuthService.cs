@@ -48,7 +48,7 @@ public class AuthService : IAuthService
             //     "[AUTH-SERVICE] Failed to create user: {newUser.Email}, reason: {reason}", 
             //     newUser.Email, createdUserResult.Errors.First().Description
             // );
-            return Result<AuthResponse>.Failed(createdUserResult.Errors.First().Description);
+            return Result<AuthResponse>.Failed(string.Join(", ", createdUserResult.Errors.Select(e => e.Description)));
         }
 
         var roleExists = await _roleManager.RoleExistsAsync(role);
@@ -57,8 +57,10 @@ public class AuthService : IAuthService
             await _userManager.AddToRoleAsync(newUser, role);
         }
 
+        var userResult = _mapper.Map<AccountResponse>(newUser);
+
         return Result<AuthResponse>.Ok(new AuthResponse { 
-            User = newUser,
+            User = userResult,
             Token = null
         });
     }
@@ -79,8 +81,11 @@ public class AuthService : IAuthService
 
         var user = await _userManager.FindByNameAsync(request.Username!);
         var token = await GenerateJwtToken(user!);
+
+        var userResult = _mapper.Map<AccountResponse>(user);
+
         return Result<AuthResponse>.Ok(new AuthResponse { 
-            User = user,
+            User = userResult,
             Token = token
         });
     }

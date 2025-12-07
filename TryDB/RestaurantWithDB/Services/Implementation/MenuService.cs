@@ -22,7 +22,7 @@ public class MenuService : IMenuService
         try
         {
             var menus = await _menuRepository.GetAllAsync();
-            if (menus.Count() == 0)
+            if (!menus.Any())
             {
                 _logger.Warning("[SERVICE] Menu(s) is empty");
                 return Result<IEnumerable<MenuResponse>>.Failed("Menu(s) is empty!");
@@ -172,7 +172,7 @@ public class MenuService : IMenuService
         try
         {    
             var menus = await _menuRepository.GetAllAsync();
-            if (menus.Count() == 0)
+            if (!menus.Any())
             {
                 _logger.Warning("[SERVICE] Menu(s) not found");
                 return Result<decimal>.Failed("Menu(s) not found");
