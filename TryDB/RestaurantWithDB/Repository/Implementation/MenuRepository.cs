@@ -16,6 +16,7 @@ public class MenuRepository : IMenuRepository
     public async Task<IEnumerable<Menu>> GetAllAsync()
     {
         _logger.Information("[REPO] Get all menus");
+
         return await _context.Menus.ToListAsync();
     }
 
@@ -31,49 +32,20 @@ public class MenuRepository : IMenuRepository
         _logger.Information("[REPO] Create a menu with id: {id}", menu.Id);
 
         _context.Menus.Add(menu);
-        await _context.SaveChangesAsync();
-
-        return menu;
-    }
-
-    public async Task<Menu?> UpdateAsync(Guid id, Menu menu)
-    {
-        _logger.Information("[REPO] Update a menu with id: {id}", id);
-
-        var existingMenu = await _context.Menus.FindAsync(id);
-
-        if (existingMenu == null)
-        {
-            return null;
-        }
-
-        existingMenu.Name = menu.Name ?? existingMenu.Name;
-        existingMenu.Description = menu.Description ?? existingMenu.Description;
-        existingMenu.Stock = menu.Stock != default ? menu.Stock : existingMenu.Stock;
-        existingMenu.IsActive = menu.IsActive;
-        existingMenu.IsDeleted = menu.IsDeleted;
-        existingMenu.UpdatedAt = DateTime.Now;
 
         await _context.SaveChangesAsync();
 
         return menu;
     }
 
-    public async Task<bool> DeleteAsync(Guid id)
+    public async Task<Menu?> UpdateAsync(Menu menu)
     {
-        _logger.Information("[REPO] Soft Delete a menu with id: {id}", id);
+        _logger.Information("[REPO] Update a menu with id: {id}", menu.Id);
 
-        var menu = await _context.Menus.FindAsync(id);
-        if (menu != null)
-        {
-            /// HARD DELETE
-            // _context.Menus.Remove(menu);
+        _context.Menus.Update(menu);
 
-            /// SOFT DELETE
-            menu.IsDeleted = true; 
-            await _context.SaveChangesAsync();
-        }
+        await _context.SaveChangesAsync();
 
-        return true;
+        return menu;
     }
 }

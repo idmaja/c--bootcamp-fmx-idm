@@ -17,74 +17,174 @@ public class MenuService : IMenuService
 
     public async Task<Result<IEnumerable<MenuResponse>>> GetAllMenusAsync()
     {
-        var menus = await _menuRepository.GetAllAsync();
+        _logger.Information("[SERVICE] Get all Menu(s)");
 
-        _logger.Information("[SERVICE] Get all menus");
+        try
+        {
+            var menus = await _menuRepository.GetAllAsync();
+            if (menus.Count() == 0)
+            {
+                _logger.Warning("[SERVICE] Menu(s) is empty");
+                return Result<IEnumerable<MenuResponse>>.Failed("Menu(s) is empty!");
+            }
 
-        var menusResponse = _mapper.Map<IEnumerable<MenuResponse>>(menus);
+            var menusResponse = _mapper.Map<IEnumerable<MenuResponse>>(menus);
 
-        return Result<IEnumerable<MenuResponse>>.Ok(menusResponse);
+            return Result<IEnumerable<MenuResponse>>.Ok(menusResponse);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to get all Menu(s): {message}", ex.Message);
+            return Result<IEnumerable<MenuResponse>>.Failed("Failed to get all Menu(s)");
+        }
     }
 
     public async Task<Result<MenuResponse>> GetMenuByIdAsync(string id)
     {
-        Guid.TryParse(id.ToString(), out Guid idMenu);
+        _logger.Information("[SERVICE] Get a menu with Menu ID: {id}", id);
 
-        var menu = await _menuRepository.GetByIdAsync(idMenu);
+        try
+        {
+            if(!Guid.TryParse(id.ToString(), out Guid idMenu))
+            {
+                _logger.Error("[SERVICE] Invalid ID Menu: {id}", id);
+                return Result<MenuResponse>.Failed("Invalid ID Menu");
+            }
 
-        _logger.Information("[SERVICE] Get a menu with id: {id}", id);
+            var menu = await _menuRepository.GetByIdAsync(idMenu);
+            if (menu == null)
+            {
+                _logger.Warning("[SERVICE] Menu not found");
+                return Result<MenuResponse>.Failed("Menu not found");
+            }
 
-        var menuResponse = _mapper.Map<MenuResponse>(menu);
+            var menuResponse = _mapper.Map<MenuResponse>(menu);
 
-        return Result<MenuResponse>.Ok(menuResponse);
+            return Result<MenuResponse>.Ok(menuResponse);   
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to get menu by ID: {message}", ex.Message);
+            return Result<MenuResponse>.Failed("Failed to get menu");
+        }
     }
 
-    public async Task<Result<MenuResponse>> CreateMenuAsync(MenuRequest request)
+    public async Task<Result<MenuResponse>> CreateMenuAsync(CreateMenuRequest request)
     {
-        var addMenu = _mapper.Map<Menu>(request);
+        _logger.Information("[SERVICE] Create a menu");
 
-        var result = await _menuRepository.AddAsync(addMenu);
+        try
+        {    
+            var newMenu = _mapper.Map<Menu>(request);
 
-        _logger.Information("[SERVICE] Create a menu with id: {id}", addMenu.Id);
+            newMenu.IsDeleted = false;
+            newMenu.CreatedAt = DateTime.UtcNow;
+            newMenu.UpdatedAt = DateTime.UtcNow;
 
-        var menuResponse = _mapper.Map<MenuResponse>(result);
+            var result = await _menuRepository.AddAsync(newMenu);
 
-        return Result<MenuResponse>.Ok(menuResponse);
+            var menuResponse = _mapper.Map<MenuResponse>(result);
+
+            return Result<MenuResponse>.Ok(menuResponse);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to create Menu: {message}", ex.Message);
+            return Result<MenuResponse>.Failed("Failed to create menu");
+        }
     }
 
-    public async Task<Result<MenuResponse>> UpdateMenuAsync(string id, MenuRequest request)
+    public async Task<Result<MenuResponse>> UpdateMenuAsync(string id, UpdateMenuRequest request)
     {
-        Guid.TryParse(id.ToString(), out Guid idMenu);
-
-        var updateMenu = _mapper.Map<Menu>(request);
-
-        var result = await _menuRepository.UpdateAsync(idMenu, updateMenu);
-
         _logger.Information("[SERVICE] Update a menu with id: {id}", id);
 
-        var menuResponse = _mapper.Map<MenuResponse>(result);
+        try
+        {    
+            if(!Guid.TryParse(id.ToString(), out Guid idMenu))
+            {
+                return Result<MenuResponse>.Failed("Invalid ID Menu");
+            }
 
-        return Result<MenuResponse>.Ok(menuResponse);
+            var existingMenu = await _menuRepository.GetByIdAsync(idMenu);
+            if (existingMenu == null)
+            {
+                return Result<MenuResponse>.Failed("Menu not found");
+            }
+
+            _mapper.Map(request, existingMenu);
+
+            existingMenu.UpdatedAt = DateTime.UtcNow;
+
+            var result = await _menuRepository.UpdateAsync(existingMenu);
+
+            var menuResponse = _mapper.Map<MenuResponse>(result);
+
+            return Result<MenuResponse>.Ok(menuResponse);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to update Menu: {message}", ex.Message);
+            return Result<MenuResponse>.Failed("Failed to update menu");
+        }
     }
 
-    public async Task<Result<bool>> DeleteMenuAsync(string id)
+    public async Task<Result<MenuResponse>> DeleteMenuAsync(string id)
     {
-        Guid.TryParse(id.ToString(), out Guid idMenu);
-
-        var result = await _menuRepository.DeleteAsync(idMenu);
-
         _logger.Information("[SERVICE] Delete a menu with id: {id}", id);
 
-        return Result<bool>.Ok(result);
+        try
+        {
+            if(!Guid.TryParse(id.ToString(), out Guid idMenu))
+            {
+                return Result<MenuResponse>.Failed("Invalid ID Menu");
+            }
+
+            var existingMenu = await _menuRepository.GetByIdAsync(idMenu);
+            if (existingMenu == null)
+            {
+                return Result<MenuResponse>.Failed("Menu not found");
+            }
+            else if (existingMenu.IsDeleted)
+            {
+                return Result<MenuResponse>.Failed($"Menu '{existingMenu.Name}' already deleted");
+            }
+
+            existingMenu.IsDeleted = true;
+            existingMenu.UpdatedAt = DateTime.UtcNow;
+
+            var result = await _menuRepository.UpdateAsync(existingMenu);
+
+            var menuResponse = _mapper.Map<MenuResponse>(result);
+
+            return Result<MenuResponse>.Ok(menuResponse);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to delete Menu: {message}", ex.Message);
+            return Result<MenuResponse>.Failed("Failed to delete menu");
+        }
     }
 
     public async Task<Result<decimal>> GetTotalStockValueAsync()
     {
-        _logger.Information("[SERVICE] Get total stock value menus");
+        _logger.Information("[SERVICE] Get Total Value by stock Menu(s)");
 
-        var menus = await _menuRepository.GetAllAsync();
-        decimal total = menus.Sum(menu => menu.Price * menu.Stock);
+        try
+        {    
+            var menus = await _menuRepository.GetAllAsync();
+            if (menus.Count() == 0)
+            {
+                _logger.Warning("[SERVICE] Menu(s) not found");
+                return Result<decimal>.Failed("Menu(s) not found");
+            }
+            decimal total = menus.Sum(menu => menu.Price * menu.Stock);
 
-        return Result<decimal>.Ok(total);
+            return Result<decimal>.Ok(total);
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to get Total Value by Stock: {message}", ex.Message);
+            return Result<decimal>.Failed("Failed to get total value by stock");
+        }
     }
 }

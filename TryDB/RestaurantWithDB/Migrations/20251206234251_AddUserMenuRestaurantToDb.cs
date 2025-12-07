@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace RestaurantWithDB.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMenusRestaurantAuthAndSeedToDb : Migration
+    public partial class AddUserMenuRestaurantToDb : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -50,43 +50,6 @@ namespace RestaurantWithDB.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Menus",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
-                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
-                    Stock = table.Column<int>(type: "INTEGER", nullable: false),
-                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Menus", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Restaurants",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ChefName = table.Column<string>(type: "TEXT", nullable: false),
-                    RestaurantName = table.Column<string>(type: "TEXT", nullable: false),
-                    RestaurantAddress = table.Column<string>(type: "TEXT", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
-                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Restaurants", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -195,6 +158,56 @@ namespace RestaurantWithDB.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Restaurants",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerId = table.Column<string>(type: "TEXT", nullable: false),
+                    RestaurantName = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    RestaurantAddress = table.Column<string>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Restaurants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Restaurants_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Menus",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 100, nullable: false),
+                    Description = table.Column<string>(type: "TEXT", maxLength: 1000, nullable: false),
+                    Stock = table.Column<int>(type: "INTEGER", nullable: false),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    IsActive = table.Column<bool>(type: "INTEGER", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "INTEGER", nullable: false),
+                    RestaurantId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Menus", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Menus_Restaurants_RestaurantId",
+                        column: x => x.RestaurantId,
+                        principalTable: "Restaurants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -208,12 +221,17 @@ namespace RestaurantWithDB.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "b990ee25-e7aa-4933-b0ed-7dc9e19dbeda", 0, "1b514a5a-f33a-4ae2-9ea4-df77b2b6f983", "superadmin@gmail.com", false, false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEKxFs/Tfo2eNJhwUmzOzkjTvq4X1xc16+lBULm5eui0dCJAQx8pLPr+cpxmTf/JVtw==", null, false, "e4cd4ec4-b07f-4c70-9d33-15d8fda4aa23", false, "superadmin@gmail.com" });
+                values: new object[] { "533CDA88-61FD-4FAE-9E8B-B58C601DBC95", 0, "1d23d28f-d691-4ff8-b1cd-b12993a17bec", "superadmin@gmail.com", false, false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEJHxEX5EHpEtMhWsMfJqHl4PnRQF4fjEuahlM+CZGhQMaMOpREGKyIRpb6nbZH1DiA==", null, false, "ec3fd64f-bfdf-4b42-a317-f35f92d1b620", false, "superadmin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "ROLE_SUPERADMIN", "b990ee25-e7aa-4933-b0ed-7dc9e19dbeda" });
+                values: new object[] { "ROLE_SUPERADMIN", "533CDA88-61FD-4FAE-9E8B-B58C601DBC95" });
+
+            migrationBuilder.InsertData(
+                table: "Restaurants",
+                columns: new[] { "Id", "CreatedAt", "IsActive", "IsDeleted", "OwnerId", "RestaurantAddress", "RestaurantName", "UpdatedAt" },
+                values: new object[] { new Guid("38870d37-a86d-479d-9eac-cdfa777c0cc8"), new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1274), true, false, "533CDA88-61FD-4FAE-9E8B-B58C601DBC95", "CSharp Street 1st Floor", "Resto A", new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1291) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -251,6 +269,16 @@ namespace RestaurantWithDB.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Menus_RestaurantId",
+                table: "Menus",
+                column: "RestaurantId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Restaurants_OwnerId",
+                table: "Restaurants",
+                column: "OwnerId");
         }
 
         /// <inheritdoc />
@@ -275,10 +303,10 @@ namespace RestaurantWithDB.Migrations
                 name: "Menus");
 
             migrationBuilder.DropTable(
-                name: "Restaurants");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "Restaurants");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace RestaurantWithDB.Migrations
 {
     [DbContext(typeof(RestaurantDbContext))]
-    [Migration("20251205141858_AddMenusRestaurantAuthAndSeedToDb")]
-    partial class AddMenusRestaurantAuthAndSeedToDb
+    [Migration("20251206234251_AddUserMenuRestaurantToDb")]
+    partial class AddUserMenuRestaurantToDb
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -47,6 +47,9 @@ namespace RestaurantWithDB.Migrations
                     b.Property<decimal>("Price")
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("RestaurantId")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Stock")
                         .HasColumnType("INTEGER");
 
@@ -54,6 +57,8 @@ namespace RestaurantWithDB.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RestaurantId");
 
                     b.ToTable("Menus");
                 });
@@ -196,19 +201,19 @@ namespace RestaurantWithDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "b990ee25-e7aa-4933-b0ed-7dc9e19dbeda",
+                            Id = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1b514a5a-f33a-4ae2-9ea4-df77b2b6f983",
+                            ConcurrencyStamp = "1d23d28f-d691-4ff8-b1cd-b12993a17bec",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
                             NormalizedUserName = "SUPERADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEKxFs/Tfo2eNJhwUmzOzkjTvq4X1xc16+lBULm5eui0dCJAQx8pLPr+cpxmTf/JVtw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJHxEX5EHpEtMhWsMfJqHl4PnRQF4fjEuahlM+CZGhQMaMOpREGKyIRpb6nbZH1DiA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e4cd4ec4-b07f-4c70-9d33-15d8fda4aa23",
+                            SecurityStamp = "ec3fd64f-bfdf-4b42-a317-f35f92d1b620",
                             TwoFactorEnabled = false,
-                            UserName = "superadmin@gmail.com"
+                            UserName = "superadmin"
                         });
                 });
 
@@ -274,7 +279,7 @@ namespace RestaurantWithDB.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "b990ee25-e7aa-4933-b0ed-7dc9e19dbeda",
+                            UserId = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
                             RoleId = "ROLE_SUPERADMIN"
                         });
                 });
@@ -304,10 +309,6 @@ namespace RestaurantWithDB.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("ChefName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
 
@@ -317,12 +318,17 @@ namespace RestaurantWithDB.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("RestaurantAddress")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("RestaurantName")
                         .IsRequired()
+                        .HasMaxLength(100)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
@@ -330,7 +336,33 @@ namespace RestaurantWithDB.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OwnerId");
+
                     b.ToTable("Restaurants");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("38870d37-a86d-479d-9eac-cdfa777c0cc8"),
+                            CreatedAt = new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1274),
+                            IsActive = true,
+                            IsDeleted = false,
+                            OwnerId = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
+                            RestaurantAddress = "CSharp Street 1st Floor",
+                            RestaurantName = "Resto A",
+                            UpdatedAt = new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1291)
+                        });
+                });
+
+            modelBuilder.Entity("Menu", b =>
+                {
+                    b.HasOne("Restaurant", "Restaurant")
+                        .WithMany("Menus")
+                        .HasForeignKey("RestaurantId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Restaurant");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -382,6 +414,22 @@ namespace RestaurantWithDB.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Restaurant", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
+                });
+
+            modelBuilder.Entity("Restaurant", b =>
+                {
+                    b.Navigation("Menus");
                 });
 #pragma warning restore 612, 618
         }

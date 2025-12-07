@@ -35,22 +35,20 @@ public class AuthService : IAuthService
         var existingUser = await _userManager.FindByEmailAsync(request.Email!);
         if(existingUser != null)
         {
-            _logger.Error("[AUTH-SERVICE] Failed to create user: ");
-            return Result<AuthResponse>.Failed("This user is exists!");
+            return Result<AuthResponse>.Failed($"This user with email {request.Email} is exists!");
         }
 
         var newUser = _mapper.Map<IdentityUser>(request);
-
-        _logger.Information("[AUTH-SERVICE] New user: {newUser}", newUser);
+        newUser.Id = Guid.NewGuid().ToString().ToUpper();
 
         var createdUserResult = await _userManager.CreateAsync(newUser, request.Password!);
         if (!createdUserResult.Succeeded)
         {
-            _logger.Error(
-                "[AUTH-SERVICE] Failed to create user: {newUser.Email}, reason: {reason}", 
-                newUser.Email, createdUserResult.Errors.First().Description
-            );
-            return Result<AuthResponse>.Failed("Failed to create user!");
+            // _logger.Error(
+            //     "[AUTH-SERVICE] Failed to create user: {newUser.Email}, reason: {reason}", 
+            //     newUser.Email, createdUserResult.Errors.First().Description
+            // );
+            return Result<AuthResponse>.Failed(createdUserResult.Errors.First().Description);
         }
 
         var roleExists = await _roleManager.RoleExistsAsync(role);

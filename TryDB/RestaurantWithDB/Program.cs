@@ -28,11 +28,14 @@ var key = Encoding.UTF8.GetBytes(jwtSettings["Key"]!);
 
 builder.Host.UseSerilog();
 
-builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ValidatorFilter>();
+});
 builder.Services.AddSwaggerGen(config =>
 {
     config.SwaggerDoc("v1", new OpenApiInfo
@@ -90,9 +93,8 @@ builder.Services // add JWT
     });  
 builder.Services.AddDbContext<RestaurantDbContext>(options => 
 {
-    // register DB
     var cs = builder.Configuration.GetConnectionString("DefaultConnection");
-    options.UseSqlite(cs);
+    options.UseSqlite(cs); // register DB
 });
 builder.Services.AddIdentity<IdentityUser, IdentityRole>()
     .AddEntityFrameworkStores<RestaurantDbContext>()
@@ -102,6 +104,8 @@ builder.Services.AddScoped<IMenuService, MenuService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddTransient<IValidator<RegisterRequest>, RegistrationValidator>();
 builder.Services.AddTransient<IValidator<LoginRequest>, LoginValidator>();
+builder.Services.AddTransient<IValidator<CreateMenuRequest>, CreateMenuValidator>();
+builder.Services.AddTransient<IValidator<UpdateMenuRequest>, UpdateMenuValidator>();
 
 var app = builder.Build();
 

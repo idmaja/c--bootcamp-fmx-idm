@@ -7,11 +7,11 @@ public class LoginValidator : AbstractValidator<LoginRequest>
     {
         RuleFor(item => item.Username)
             .NotEmpty().WithMessage("Username can not be empty!")
-            .NotNull().WithMessage("Username can not be null!")
-            .Must(value => Regex.IsMatch(value!, @"^[a-zA-Z0-9]+$")).WithMessage("Username must not contain symbols!");
+            .Must(value => !string.IsNullOrEmpty(value) && Regex.IsMatch(value, @"^[a-zA-Z0-9]+$"))
+                .WithMessage("Username can only contain letters and numbers!");
 
         RuleFor(item => item.Password)
             .NotEmpty().WithMessage("Password can not be empty!")
-            .NotNull().WithMessage("Password can not be null!");
+            .MinimumLength(6).WithMessage("Password must have minimum 6 characters!");
     }
 }

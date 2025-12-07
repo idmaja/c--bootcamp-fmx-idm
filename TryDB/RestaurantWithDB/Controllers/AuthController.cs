@@ -23,32 +23,20 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<AuthResponse>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<ValidationResponse>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-    [ProducesResponseType(StatusCodes.Status412PreconditionFailed, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> Regsiter([FromBody] RegisterRequest request)
     {
         try
         {
-            var validationResult = _registerValidator.Validate(request);
-            if (!validationResult.IsValid)
-            {
-                return StatusCode(StatusCodes.Status412PreconditionFailed,new GlobalResponse<object>
-                {
-                    Status = false,
-                    Message = "Register fields validation has been failed!",
-                    Data = validationResult.Errors.Select(error => error.ErrorMessage)
-                });
-            }
-
             var result = await _authService.RegisterAsync(request);
             if (!result.Success)
             {
                 return BadRequest(new GlobalResponse<object>
                 {
                     Status = false,
-                    Message = "Failed to register user",
-                    Data = result.Error
+                    Message = result.Error,
+                    Data = null
                 });
             }
 
@@ -73,32 +61,20 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<AuthResponse>))]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<object>))]
+    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<ValidationResponse>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-    [ProducesResponseType(StatusCodes.Status412PreconditionFailed, Type = typeof(GlobalResponse<object>))]
     public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
         try
         {
-            var validationResult = _loginValidator.Validate(request);
-            if (!ModelState.IsValid)
-            {
-                return StatusCode(StatusCodes.Status412PreconditionFailed, new GlobalResponse<object>
-                {
-                    Status = false,
-                    Message = "Login fields validation has been failed!",
-                    Data = validationResult.Errors.Select(error => error.ErrorMessage)
-                });
-            }
-
             var result = await _authService.LoginAsync(request);
             if (!result.Success)
             {
                 return BadRequest(new GlobalResponse<object>
                 {
                     Status = false,
-                    Message = "Failed to login user",
-                    Data = result.Error
+                    Message = result.Error,
+                    Data = null
                 });
             }
 
