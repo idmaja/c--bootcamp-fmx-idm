@@ -221,17 +221,17 @@ namespace RestaurantWithDB.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "533CDA88-61FD-4FAE-9E8B-B58C601DBC95", 0, "1d23d28f-d691-4ff8-b1cd-b12993a17bec", "superadmin@gmail.com", false, false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN@GMAIL.COM", "AQAAAAIAAYagAAAAEJHxEX5EHpEtMhWsMfJqHl4PnRQF4fjEuahlM+CZGhQMaMOpREGKyIRpb6nbZH1DiA==", null, false, "ec3fd64f-bfdf-4b42-a317-f35f92d1b620", false, "superadmin" });
+                values: new object[] { "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D", 0, "1bafbe2d-89a2-450e-8155-b4d174a1c2d8", "superadmin@gmail.com", false, false, null, "SUPERADMIN@GMAIL.COM", "SUPERADMIN", "AQAAAAIAAYagAAAAEKI0azrYFRGIMX8x+qRoSkS+V5TG6VoLJKV4RaGN+wWKusc6EJcgmK0yh5MOIyx7Ww==", null, false, "00e7c752-05b0-48e5-8d29-6ed19e5a25d5", false, "superadmin" });
 
             migrationBuilder.InsertData(
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
-                values: new object[] { "ROLE_SUPERADMIN", "533CDA88-61FD-4FAE-9E8B-B58C601DBC95" });
+                values: new object[] { "ROLE_SUPERADMIN", "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D" });
 
             migrationBuilder.InsertData(
                 table: "Restaurants",
                 columns: new[] { "Id", "CreatedAt", "IsActive", "IsDeleted", "OwnerId", "RestaurantAddress", "RestaurantName", "UpdatedAt" },
-                values: new object[] { new Guid("38870d37-a86d-479d-9eac-cdfa777c0cc8"), new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1274), true, false, "533CDA88-61FD-4FAE-9E8B-B58C601DBC95", "CSharp Street 1st Floor", "Resto A", new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1291) });
+                values: new object[] { new Guid("6813a0d8-5033-4b14-aa8f-c27120abbb42"), new DateTime(2025, 12, 8, 1, 48, 16, 681, DateTimeKind.Utc).AddTicks(2343), true, false, "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D", "CSharp Street 1st Floor", "Resto A", new DateTime(2025, 12, 8, 1, 48, 16, 681, DateTimeKind.Utc).AddTicks(2348) });
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",

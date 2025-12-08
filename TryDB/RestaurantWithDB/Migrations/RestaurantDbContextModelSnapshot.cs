@@ -198,17 +198,17 @@ namespace RestaurantWithDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
+                            Id = "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "1d23d28f-d691-4ff8-b1cd-b12993a17bec",
+                            ConcurrencyStamp = "1bafbe2d-89a2-450e-8155-b4d174a1c2d8",
                             Email = "superadmin@gmail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "SUPERADMIN@GMAIL.COM",
-                            NormalizedUserName = "SUPERADMIN@GMAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJHxEX5EHpEtMhWsMfJqHl4PnRQF4fjEuahlM+CZGhQMaMOpREGKyIRpb6nbZH1DiA==",
+                            NormalizedUserName = "SUPERADMIN",
+                            PasswordHash = "AQAAAAIAAYagAAAAEKI0azrYFRGIMX8x+qRoSkS+V5TG6VoLJKV4RaGN+wWKusc6EJcgmK0yh5MOIyx7Ww==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "ec3fd64f-bfdf-4b42-a317-f35f92d1b620",
+                            SecurityStamp = "00e7c752-05b0-48e5-8d29-6ed19e5a25d5",
                             TwoFactorEnabled = false,
                             UserName = "superadmin"
                         });
@@ -276,7 +276,7 @@ namespace RestaurantWithDB.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
+                            UserId = "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D",
                             RoleId = "ROLE_SUPERADMIN"
                         });
                 });
@@ -340,14 +340,14 @@ namespace RestaurantWithDB.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("38870d37-a86d-479d-9eac-cdfa777c0cc8"),
-                            CreatedAt = new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1274),
+                            Id = new Guid("6813a0d8-5033-4b14-aa8f-c27120abbb42"),
+                            CreatedAt = new DateTime(2025, 12, 8, 1, 48, 16, 681, DateTimeKind.Utc).AddTicks(2343),
                             IsActive = true,
                             IsDeleted = false,
-                            OwnerId = "533CDA88-61FD-4FAE-9E8B-B58C601DBC95",
+                            OwnerId = "BF36C9F8-BA2A-4DC6-A31C-48286F602E5D",
                             RestaurantAddress = "CSharp Street 1st Floor",
                             RestaurantName = "Resto A",
-                            UpdatedAt = new DateTime(2025, 12, 6, 23, 42, 51, 232, DateTimeKind.Utc).AddTicks(1291)
+                            UpdatedAt = new DateTime(2025, 12, 8, 1, 48, 16, 681, DateTimeKind.Utc).AddTicks(2348)
                         });
                 });
 

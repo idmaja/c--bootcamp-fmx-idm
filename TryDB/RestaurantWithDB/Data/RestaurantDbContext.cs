@@ -51,9 +51,9 @@ public class RestaurantDbContext : IdentityDbContext
         {
             Id = superAdminId,
             UserName = "superadmin",
-            NormalizedEmail = "superadmin".ToUpper(),
+            NormalizedUserName = "superadmin".ToUpper(),
             Email = superAdminEmail,
-            NormalizedUserName = superAdminEmail.ToUpper(),
+            NormalizedEmail = superAdminEmail.ToUpper(),
         };
 
         superAdminUser.PasswordHash = new PasswordHasher<IdentityUser>()
