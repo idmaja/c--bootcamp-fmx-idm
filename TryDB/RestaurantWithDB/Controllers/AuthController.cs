@@ -1,6 +1,7 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 using Swashbuckle.AspNetCore.Annotations;
 
 [ApiController]
@@ -16,7 +17,7 @@ public class AuthController : ControllerBase
         Serilog.ILogger logger
     ){
         _authService = authService;
-        _logger = logger;
+        _logger = Log.ForContext<AuthController>();
     }
 
     [HttpPost("register")]
