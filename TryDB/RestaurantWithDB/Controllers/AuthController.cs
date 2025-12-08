@@ -11,10 +11,8 @@ public class AuthController : ControllerBase
     private readonly IAuthService _authService;
     private readonly Serilog.ILogger _logger;
 
-
     public AuthController(
-        IAuthService authService,
-        Serilog.ILogger logger
+        IAuthService authService
     ){
         _authService = authService;
         _logger = Log.ForContext<AuthController>();
