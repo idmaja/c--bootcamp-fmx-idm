@@ -32,62 +32,86 @@ public class AuthService : IAuthService
 
     public async Task<Result<AuthResponse>> RegisterAsync(RegisterRequest request, string role = "User")
     {
-        var existingUser = await _userManager.FindByEmailAsync(request.Email!);
-        if(existingUser != null)
+        _logger.Information("[SERVICE] Register");
+
+        try
         {
-            return Result<AuthResponse>.Failed($"This user with email {request.Email} is exists!");
+            var existingUser = await _userManager.FindByEmailAsync(request.Email!);
+            if(existingUser != null)
+            {
+                _logger.Warning("[SERVICE] User with email {request.Email} is exists!", request.Email);
+                return Result<AuthResponse>.Failed($"User with email {request.Email} is exists!");
+            }
+
+            var newUser = _mapper.Map<IdentityUser>(request);
+            newUser.Id = Guid.NewGuid().ToString().ToUpper();
+
+            var createdUserResult = await _userManager.CreateAsync(newUser, request.Password!);
+            if (!createdUserResult.Succeeded)
+            {
+                var errors = string.Join(", ", createdUserResult.Errors.Select(e => e.Description));
+                _logger.Warning(
+                    "[AUTH-SERVICE] Failed to create user: {newUser.Email}, reason: {reason}", 
+                    newUser.Email, errors
+                );
+                return Result<AuthResponse>.Failed(errors);
+            }
+
+            var roleExists = await _roleManager.RoleExistsAsync(role);
+            if (roleExists)
+            {
+                await _userManager.AddToRoleAsync(newUser, role);
+            }
+
+            var userResult = _mapper.Map<AccountResponse>(newUser);
+
+            return Result<AuthResponse>.Ok(new AuthResponse { 
+                User = userResult,
+                Token = null
+            });
+        }
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to register: {message}", ex.Message);
+            return Result<AuthResponse>.Failed("Failed to register.");
         }
 
-        var newUser = _mapper.Map<IdentityUser>(request);
-        newUser.Id = Guid.NewGuid().ToString().ToUpper();
-
-        var createdUserResult = await _userManager.CreateAsync(newUser, request.Password!);
-        if (!createdUserResult.Succeeded)
-        {
-            // _logger.Error(
-            //     "[AUTH-SERVICE] Failed to create user: {newUser.Email}, reason: {reason}", 
-            //     newUser.Email, createdUserResult.Errors.First().Description
-            // );
-            return Result<AuthResponse>.Failed(string.Join(", ", createdUserResult.Errors.Select(e => e.Description)));
-        }
-
-        var roleExists = await _roleManager.RoleExistsAsync(role);
-        if (roleExists)
-        {
-            await _userManager.AddToRoleAsync(newUser, role);
-        }
-
-        var userResult = _mapper.Map<AccountResponse>(newUser);
-
-        return Result<AuthResponse>.Ok(new AuthResponse { 
-            User = userResult,
-            Token = null
-        });
     }
 
     public async Task<Result<AuthResponse>> LoginAsync(LoginRequest request)
     {
-        var loginResult = await _signInManager.PasswordSignInAsync(
-            request.Username!,
-            request.Password!,
-            isPersistent: false,
-            lockoutOnFailure: false
-        );
+        _logger.Information("[SERVICE] Login");
 
-        if (!loginResult.Succeeded)
+        try
         {
-            return Result<AuthResponse>.Failed("Invalid username or password!");
+            var loginResult = await _signInManager.PasswordSignInAsync(
+                request.Username!,
+                request.Password!,
+                isPersistent: false,
+                lockoutOnFailure: false
+            );
+
+            if (!loginResult.Succeeded)
+            {
+                _logger.Warning("[SERVICE] Invalid username or password!");
+                return Result<AuthResponse>.Failed("Invalid username or password!");
+            }
+
+            var user = await _userManager.FindByNameAsync(request.Username!);
+            var token = await GenerateJwtToken(user!);
+
+            var userResult = _mapper.Map<AccountResponse>(user);
+
+            return Result<AuthResponse>.Ok(new AuthResponse { 
+                User = userResult,
+                Token = token
+            });
         }
-
-        var user = await _userManager.FindByNameAsync(request.Username!);
-        var token = await GenerateJwtToken(user!);
-
-        var userResult = _mapper.Map<AccountResponse>(user);
-
-        return Result<AuthResponse>.Ok(new AuthResponse { 
-            User = userResult,
-            Token = token
-        });
+        catch (Exception ex)
+        {
+            _logger.Error("[SERVICE] Failed to login: {message}", ex.Message);
+            return Result<AuthResponse>.Failed("Failed to login.");
+        }
     }
 
     private async Task<string> GenerateJwtToken(IdentityUser user)

@@ -87,6 +87,7 @@ public class AccountService : IAccountService
             var existingUser = await _userManager.FindByEmailAsync(request.EmailAddress!);
             if(existingUser != null)
             {
+                _logger.Warning("[SERVICE] This user with email {EmailAddress} is exists!", request.EmailAddress);
                 return Result<AccountResponse>.Failed($"This user with email {request.EmailAddress} is exists!");
             }
 
@@ -97,7 +98,9 @@ public class AccountService : IAccountService
             var createdUserResult = await _userManager.CreateAsync(newUser, request.Password!);
             if (!createdUserResult.Succeeded)
             {
-                return Result<AccountResponse>.Failed(string.Join(", ", createdUserResult.Errors.Select(e => e.Description)));
+                var errors = string.Join(", ", createdUserResult.Errors.Select(e => e.Description));
+                _logger.Warning("[SERVICE] This error while creating Account: {errors}", errors);
+                return Result<AccountResponse>.Failed(errors);
             }
 
             var roleExists = await _roleManager.RoleExistsAsync(request.Role!);
@@ -127,7 +130,8 @@ public class AccountService : IAccountService
             var existingUser = await _userManager.FindByIdAsync(id);
             if(existingUser == null)
             {
-                return Result<AccountResponse>.Failed($"This user with email {request.EmailAddress} not found!");
+                _logger.Warning("[SERVICE] Account with email {EmailAddress} not found!", request.EmailAddress);
+                return Result<AccountResponse>.Failed($"Account with email {request.EmailAddress} not found!");
             }
 
             _mapper.Map(request, existingUser);
@@ -135,7 +139,9 @@ public class AccountService : IAccountService
             var createdUserResult = await _userManager.UpdateAsync(existingUser);
             if (!createdUserResult.Succeeded)
             {
-                return Result<AccountResponse>.Failed(string.Join(", ", createdUserResult.Errors.Select(e => e.Description)));
+                var errors = string.Join(", ", createdUserResult.Errors.Select(e => e.Description));
+                _logger.Warning("[SERVICE] This error while updating Account: {errors}", errors);
+                return Result<AccountResponse>.Failed(errors);
             }
 
             if (!string.IsNullOrEmpty(request.Role))
@@ -143,6 +149,7 @@ public class AccountService : IAccountService
                 var roleExists = await _roleManager.RoleExistsAsync(request.Role);
                 if (!roleExists)
                 {
+                    _logger.Warning("[SERVICE] Role '{Role}' does not exist.", request.Role);
                     return Result<AccountResponse>.Failed($"Role '{request.Role}' does not exist.");
                 }
 
@@ -151,12 +158,14 @@ public class AccountService : IAccountService
                 var removeResult = await _userManager.RemoveFromRolesAsync(existingUser, currentRoles);
                 if (!removeResult.Succeeded)
                 {
+                    _logger.Warning("[SERVICE] Failed to remove old roles!");
                     return Result<AccountResponse>.Failed("Failed to remove old roles.");
                 }
 
                 var addResult = await _userManager.AddToRoleAsync(existingUser, request.Role);
                 if (!addResult.Succeeded)
                 {
+                    _logger.Warning("[SERVICE] Failed to add new role!");
                     return Result<AccountResponse>.Failed("Failed to add new role.");
                 }
             }

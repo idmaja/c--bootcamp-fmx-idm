@@ -1,31 +1,33 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 [ApiController]
 [Route("api/auth")]
 public class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
-    private readonly IValidator<RegisterRequest> _registerValidator;
-    private readonly IValidator<LoginRequest> _loginValidator;
+    private readonly Serilog.ILogger _logger;
+
 
     public AuthController(
-        IAuthService authService, 
-        IValidator<RegisterRequest> registerValidator,
-        IValidator<LoginRequest> loginValidator
+        IAuthService authService,
+        Serilog.ILogger logger
     ){
         _authService = authService;
-        _registerValidator = registerValidator;
-        _loginValidator = loginValidator;
+        _logger = logger;
     }
 
     [HttpPost("register")]
+    [SwaggerOperation(
+        Summary = "Register for user"
+    )]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<AuthResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<ValidationResponse>))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(GlobalResponse<object>))]
-    public async Task<IActionResult> Regsiter([FromBody] RegisterRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterRequest request)
     {
         try
         {
@@ -49,16 +51,20 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.Error("[CONTROLLER] Failed to register: {message}", ex.Message);
             return BadRequest(new GlobalResponse<object>
             {
                 Status = false,
-                Message = $"Failed to register: {ex.Message}",
+                Message = $"Failed to register!",
                 Data = null
             });
         }
     }    
     
     [HttpPost("login")]
+    [SwaggerOperation(
+        Summary = "Login for user"
+    )]
     [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(GlobalResponse<AuthResponse>))]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(GlobalResponse<ValidationResponse>))]
@@ -87,10 +93,11 @@ public class AuthController : ControllerBase
         }
         catch (Exception ex)
         {
+            _logger.Error("[CONTROLLER] Failed to login: {message}", ex.Message);
             return BadRequest(new GlobalResponse<object>
             {
                 Status = false,
-                Message = $"Failed to login: {ex.Message}",
+                Message = $"Failed to login!",
                 Data = null
             });
         }
